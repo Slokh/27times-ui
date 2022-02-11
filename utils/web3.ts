@@ -137,6 +137,7 @@ export const switchWalletNetwork = async (
 ) => {
   const hexaChainId = hexValue(Number(id));
   try {
+    // @ts-ignore
     await window?.ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: hexaChainId }],
@@ -156,6 +157,7 @@ export const ethereumReady = async (timeout = 10000): Promise<boolean> => {
   return new Promise((resolve) => {
     const checkReady = (nbAttempts: number) => {
       setTimeout(() => {
+        // @ts-ignore
         if (window?.ethereum?.chainId) {
           resolve(true);
         } else if (nbAttempts * polling <= timeout) {
@@ -166,6 +168,7 @@ export const ethereumReady = async (timeout = 10000): Promise<boolean> => {
       }, polling);
     };
 
+    // @ts-ignore
     if (window?.ethereum?.chainId) {
       resolve(true);
     } else {
