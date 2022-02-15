@@ -1,6 +1,5 @@
 import { Layout } from "@27times/components/Layout";
-import { poems } from "@27times/utils/metadata";
-import { TriangleDownIcon } from "@chakra-ui/icons";
+import { leftPoems, rightPoems } from "@27times/utils/metadata";
 import {
   Box,
   Flex,
@@ -18,8 +17,6 @@ import "react-image-lightbox/style.css";
 const PoemImage = ({ poem, onClick }: any) => (
   <Box
     w={64}
-    h={64}
-    position="relative"
     onClick={onClick}
     cursor="pointer"
     shadow="base"
@@ -37,28 +34,6 @@ const PoemImage = ({ poem, onClick }: any) => (
       w="100%"
       zIndex={0}
     />
-    <Flex
-      zIndex={11}
-      position="absolute"
-      color="#E4B2BF"
-      bottom={0}
-      right={0}
-      h="100%"
-      w="100%"
-      justify="center"
-      align="flex-end"
-      pb={1}
-    >
-      <TriangleDownIcon />
-    </Flex>
-    <Box
-      zIndex={10}
-      position="absolute"
-      bgGradient="linear(to-t, #363435, transparent, transparent)"
-      top={0}
-      h="100%"
-      w="100%"
-    />
   </Box>
 );
 
@@ -66,7 +41,6 @@ const Poem = ({ poem, onClick, isReversed }: any) => (
   <Stack
     pt={4}
     pb={4}
-    h={[80, 80, 96, 96]}
     w={[80, 80, 96, 96]}
     align={isReversed ? "flex-end" : "flex-start"}
   >
@@ -89,17 +63,22 @@ const Poem = ({ poem, onClick, isReversed }: any) => (
 const Home: NextPage = () => {
   const [currentPoem, setCurrentPoem] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const leftPoems = useBreakpointValue({
+
+  const allPoems = leftPoems
+    .concat(rightPoems)
+    .sort((a, b) => (a.date > b.date ? 1 : -1));
+
+  const _leftPoems = useBreakpointValue({
     base: [],
-    md: poems.filter((poem: any, i: number) => i % 2 === 0),
+    md: leftPoems,
   });
-  const rightPoems = useBreakpointValue({
-    base: poems,
-    md: poems.filter((poem: any, i: number) => i % 2 !== 0),
+  const _rightPoems = useBreakpointValue({
+    base: allPoems,
+    md: rightPoems,
   });
 
-  const handlePoemClick = (i: number) => {
-    setCurrentPoem(i);
+  const handlePoemClick = (clicked: string) => {
+    setCurrentPoem(allPoems.findIndex(({ date }) => date === clicked));
     onOpen();
   };
 
@@ -107,15 +86,20 @@ const Home: NextPage = () => {
     <Layout>
       {isOpen && (
         <Lightbox
-          mainSrc={poems[currentPoem].image}
-          nextSrc={poems[(currentPoem + 1) % poems.length].image}
-          prevSrc={poems[(currentPoem + poems.length - 1) % poems.length].image}
+          mainSrc={allPoems[currentPoem].image}
+          nextSrc={allPoems[(currentPoem + 1) % allPoems.length].image}
+          prevSrc={
+            allPoems[(currentPoem + allPoems.length - 1) % allPoems.length]
+              .image
+          }
           onCloseRequest={onClose}
           onMovePrevRequest={() =>
-            setCurrentPoem((currentPoem + poems.length - 1) % poems.length)
+            setCurrentPoem(
+              (currentPoem + allPoems.length - 1) % allPoems.length
+            )
           }
           onMoveNextRequest={() =>
-            setCurrentPoem((currentPoem + 1) % poems.length)
+            setCurrentPoem((currentPoem + 1) % allPoems.length)
           }
           enableZoom={false}
           imagePadding={50}
@@ -123,8 +107,12 @@ const Home: NextPage = () => {
       )}
       <Flex w="full" justify="center" pt={8}>
         <Stack align="flex-end">
-          {leftPoems?.map((poem, i) => (
-            <Poem key={i} poem={poem} onClick={() => handlePoemClick(i)} />
+          {_leftPoems?.map((poem, i) => (
+            <Poem
+              key={i}
+              poem={poem}
+              onClick={() => handlePoemClick(poem.date)}
+            />
           ))}
         </Stack>
         <Flex
@@ -133,12 +121,12 @@ const Home: NextPage = () => {
           borderRadius={64}
           borderStyle="dashed"
         />
-        <Stack mt={[0, 0, 48]} align="flex-start">
-          {rightPoems?.map((poem, i) => (
+        <Stack mt={[0, 0, 32]} align="flex-start">
+          {_rightPoems?.map((poem, i) => (
             <Poem
               key={i}
               poem={poem}
-              onClick={() => handlePoemClick(i * 2 + 1)}
+              onClick={() => handlePoemClick(poem.date)}
               isReversed
             />
           ))}
