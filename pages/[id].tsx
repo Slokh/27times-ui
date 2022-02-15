@@ -19,6 +19,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { setIsPreviouslyConnected } from "@27times/utils/web3";
 import { injectedConnector } from "@27times/utils/connectors";
 import { isAddress } from "ethers/lib/utils";
+import Router from "next/router";
 
 const ENSWrapper = ({ address }: any) => {
   const [name, setName] = useState(address);
@@ -238,7 +239,19 @@ const Item: NextPage = ({ id }: any) => {
   );
 };
 
-Item.getInitialProps = async ({ query }) => {
+Item.getInitialProps = async ({ res, query }) => {
+  if (res) {
+    // server
+    res.writeHead(302, {
+      Location: "/",
+    });
+
+    res.end();
+  } else {
+    // client
+    Router.push("/");
+  }
+
   return { id: query.id };
 };
 
