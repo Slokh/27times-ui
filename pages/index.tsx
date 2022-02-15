@@ -39,8 +39,8 @@ const PoemImage = ({ poem, onClick }: any) => (
 
 const Poem = ({ poem, onClick, isReversed }: any) => (
   <Stack
-    pt={4}
-    pb={4}
+    pt={16}
+    pb={isReversed ? 32 : 16}
     w={[80, 80, 96, 96]}
     align={isReversed ? "flex-end" : "flex-start"}
   >
@@ -53,9 +53,7 @@ const Poem = ({ poem, onClick, isReversed }: any) => (
       textShadow="0 0 10px rgba(0,0,0,0.6)"
       whiteSpace="nowrap"
       justify={isReversed ? "flex-end" : "flex-start"}
-    >
-      {format(addDays(new Date(poem.date), 1), "MMM do, yyyy")}
-    </Flex>
+    />
     <PoemImage poem={poem} onClick={onClick} />
   </Stack>
 );
@@ -121,7 +119,7 @@ const Home: NextPage = () => {
           borderRadius={64}
           borderStyle="dashed"
         />
-        <Stack mt={[0, 0, 32]} align="flex-start">
+        <Stack mt={[0, 0, 64]} align="flex-start">
           {_rightPoems?.map((poem, i) => (
             <Poem
               key={i}

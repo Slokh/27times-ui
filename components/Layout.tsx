@@ -81,6 +81,7 @@ export const Layout = ({ children, right }: any) => {
                   display={["none", "none", "block"]}
                   textShadow="0 0 10px rgba(0,0,0,0.6)"
                   color="#E4B2BF"
+                  fontFamily="Fake Receipt"
                 >{`Auctions starting in ${duration}`}</Text>
               </Flex>
             </Stack>

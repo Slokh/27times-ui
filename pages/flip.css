@@ -35,3 +35,13 @@
 .flip-card-back {
   transform: rotateY(180deg);
 }
+
+@font-face {
+  font-family: "Merchant Copy Wide";
+  src: url("/fonts/Merchant Copy Wide.ttf");
+}
+
+@font-face {
+  font-family: "Fake Receipt";
+  src: url("/fonts/fake receipt.ttf");
+}
