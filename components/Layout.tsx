@@ -61,7 +61,12 @@ export const Layout = ({ children, right }: any) => {
             bgRepeat="no-repeat"
             bgAttachment="fixed"
           ></Flex>
-          <Stack w={right ? "50%" : "full"} p={4} align="center">
+          <Stack
+            w={right ? "50%" : "full"}
+            p={4}
+            pl={right ? 32 : 4}
+            align="center"
+          >
             <Stack maxW="2xl" align="center">
               <Image src="header.png" alt="header" />
               <Flex w="full" pt={4} justify="space-around">
@@ -71,7 +76,10 @@ export const Layout = ({ children, right }: any) => {
                       <Image w={8} src="twitter.png" alt="twitter" />
                     </Link>
                   </NextLink>
-                  <NextLink href="https://opensea.io" passHref>
+                  <NextLink
+                    href="https://opensea.io/collection/27-times-by-karsen-daily"
+                    passHref
+                  >
                     <Link _hover={{ textDecoration: "none" }}>
                       <Image w={8} src="opensea.svg" alt="opensea" />
                     </Link>

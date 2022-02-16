@@ -1,48 +1,19 @@
 import { Layout } from "@27times/components/Layout";
-import { leftPoems, rightPoems } from "@27times/utils/metadata";
-import {
-  Box,
-  Flex,
-  Image,
-  Stack,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { addDays, format } from "date-fns";
+import { PoemImage } from "@27times/components/PoemImage";
+import { fetchItems } from "@27times/utils/api";
+import { allPoems, leftPoems, rightPoems } from "@27times/utils/metadata";
+import { Flex, Link, Stack, useBreakpointValue } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { useState } from "react";
-import Lightbox from "react-image-lightbox";
+import NextLink from "next/link";
+import { useEffect, useState } from "react";
 import "react-image-lightbox/style.css";
-
-const PoemImage = ({ poem, onClick }: any) => (
-  <Box
-    w={64}
-    onClick={onClick}
-    cursor="pointer"
-    shadow="base"
-    transition="all 0.2s ease"
-    _hover={{
-      shadow: "0 0 10px #E4B2BF",
-    }}
-  >
-    <Image
-      src={poem.image}
-      alt={poem.date}
-      objectFit="cover"
-      objectPosition="0 0"
-      maxH="100%"
-      w="100%"
-      zIndex={0}
-    />
-  </Box>
-);
 
 const Poem = ({ poem, onClick, isReversed }: any) => (
   <Stack
     pt={16}
-    pb={isReversed ? 32 : 16}
+    pb={[0, 0, isReversed ? 32 : 16]}
     w={[80, 80, 96, 96]}
-    align={isReversed ? "flex-end" : "flex-start"}
+    align={["center", "center", isReversed ? "flex-end" : "flex-start"]}
   >
     <Flex
       w="full"
@@ -54,17 +25,17 @@ const Poem = ({ poem, onClick, isReversed }: any) => (
       whiteSpace="nowrap"
       justify={isReversed ? "flex-end" : "flex-start"}
     />
-    <PoemImage poem={poem} onClick={onClick} />
+    <NextLink href={`/${poem.id}`} passHref>
+      <Link>
+        <PoemImage poem={poem} onClick={onClick} />
+      </Link>
+    </NextLink>
   </Stack>
 );
 
 const Home: NextPage = () => {
-  const [currentPoem, setCurrentPoem] = useState(0);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const allPoems = leftPoems
-    .concat(rightPoems)
-    .sort((a, b) => (a.date > b.date ? 1 : -1));
+  // const [currentPoem, setCurrentPoem] = useState(0);
+  // const { isOpen, onOpen, onClose } = useDisclosure();
 
   const _leftPoems = useBreakpointValue({
     base: [],
@@ -75,14 +46,49 @@ const Home: NextPage = () => {
     md: rightPoems,
   });
 
-  const handlePoemClick = (clicked: string) => {
-    setCurrentPoem(allPoems.findIndex(({ date }) => date === clicked));
-    onOpen();
-  };
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    (async () => setItems(await fetchItems()))();
+  }, []);
+
+  // if (items?.length) {
+  //   console.log(
+  //     leftPoems.map((poem) => {
+  //       const id = poem.image.split("/")[2].split(".png")[0];
+
+  //       const item = items.find((i) => i.name === id);
+  //       return {
+  //         ...poem,
+  //         id: item?.token_id,
+  //         description: item?.description,
+  //         name: item?.name,
+  //       };
+  //     })
+  //   );
+  //   console.log(
+  //     rightPoems.map((poem) => {
+  //       const id = poem.image.split("/")[2].split(".png")[0];
+
+  //       const item = items.find((i) => i.name === id);
+  //       return {
+  //         ...poem,
+  //         id: item?.token_id,
+  //         description: item?.description,
+  //         name: item?.name,
+  //       };
+  //     })
+  //   );
+  // }
+
+  // const handlePoemClick = (clicked: string) => {
+  //   setCurrentPoem(allPoems.findIndex(({ date }) => date === clicked));
+  //   onOpen();
+  // };
 
   return (
     <Layout>
-      {isOpen && (
+      {/* {isOpen && (
         <Lightbox
           mainSrc={allPoems[currentPoem].image}
           nextSrc={allPoems[(currentPoem + 1) % allPoems.length].image}
@@ -102,14 +108,14 @@ const Home: NextPage = () => {
           enableZoom={false}
           imagePadding={50}
         />
-      )}
+      )} */}
       <Flex w="full" justify="center" pt={8}>
         <Stack align="flex-end">
           {_leftPoems?.map((poem, i) => (
             <Poem
               key={i}
               poem={poem}
-              onClick={() => handlePoemClick(poem.date)}
+              // onClick={() => handlePoemClick(poem.date)}
             />
           ))}
         </Stack>
@@ -124,7 +130,7 @@ const Home: NextPage = () => {
             <Poem
               key={i}
               poem={poem}
-              onClick={() => handlePoemClick(poem.date)}
+              // onClick={() => handlePoemClick(poem.date)}
               isReversed
             />
           ))}

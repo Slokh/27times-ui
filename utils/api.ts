@@ -1,13 +1,9 @@
 const API_BASE = "https://api.opensea.io";
 const API_KEY = "281e8177c2694d9dbb1e4303599a82bf";
 
-const CONTRACT_ADDRESS = "0xf0d2d631a24db247f5eb0421fa3e6a169c72565f";
+const CONTRACT_ADDRESS = "0x2121bc170a8ef73a5cf576bdf5d55f916d58b18b";
 
-const TOKEN_IDS = [296, 270, 264, 219, 243, 275, 253, 290, 276, 283];
-
-const query = `?asset_contract_address=${CONTRACT_ADDRESS}&token_ids=${TOKEN_IDS.join(
-  "&token_ids="
-)}`;
+const query = `?asset_contract_address=${CONTRACT_ADDRESS}`;
 
 const _fetch = async (endpoint: string) => {
   return await fetch(endpoint, {

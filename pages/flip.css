@@ -45,3 +45,7 @@
   font-family: "Fake Receipt";
   src: url("/fonts/fake receipt.ttf");
 }
+
+::selection {
+  background-color: #e4b2bf;
+}

@@ -10,6 +10,7 @@ import {
   Link,
   Stack,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import { formatDistanceStrict, intervalToDuration } from "date-fns";
@@ -20,6 +21,8 @@ import { setIsPreviouslyConnected } from "@27times/utils/web3";
 import { injectedConnector } from "@27times/utils/connectors";
 import { isAddress } from "ethers/lib/utils";
 import Router from "next/router";
+import { PoemImage } from "@27times/components/PoemImage";
+import { allPoems } from "@27times/utils/metadata";
 
 const ENSWrapper = ({ address }: any) => {
   const [name, setName] = useState(address);
@@ -116,7 +119,7 @@ const Bids = ({ bids }: any) => (
 );
 
 const ItemDetails = ({ item, highestBid }: any) => {
-  const [duration, setDuration] = useState("0:00:00");
+  const [duration, setDuration] = useState("");
   const [input, setInput] = useState("");
   const { active, library } = useWeb3React<Web3Provider>();
 
@@ -152,55 +155,67 @@ const ItemDetails = ({ item, highestBid }: any) => {
         <Heading fontFamily="monospace" textShadow="0 0 10px rgba(0,0,0,0.6)">
           {item?.name}
         </Heading>
-        <Text textShadow="0 0 10px rgba(0,0,0,0.6)">{item?.description}</Text>
+        <Text textShadow="0 0 4px rgba(0,0,0,1)" whiteSpace="pre-wrap">
+          {item?.description}
+        </Text>
       </Stack>
-      <Stack direction="row" justify="space-around">
-        <Flex direction="column" align="center">
-          <Heading fontFamily="monospace" textShadow="0 0 10px rgba(0,0,0,0.6)">
-            {highestBidPrice ? (
-              <Flex>{`${highestBidPrice.toFixed(3)} ETH`}</Flex>
+      {(highestBid || duration) && (
+        <>
+          <Stack direction="row" justify="space-around">
+            <Flex direction="column" align="center">
+              <Heading
+                fontFamily="monospace"
+                textShadow="0 0 10px rgba(0,0,0,0.6)"
+              >
+                {highestBidPrice ? (
+                  <Flex>{`${highestBidPrice.toFixed(3)} ETH`}</Flex>
+                ) : (
+                  <Flex>-</Flex>
+                )}
+              </Heading>
+              <Text color="#E4B2BF" textShadow="0 0 10px rgba(0,0,0,0.6)">
+                Highest Bid
+              </Text>
+            </Flex>
+            <Flex direction="column" align="center">
+              <Heading
+                fontFamily="monospace"
+                textShadow="0 0 10px rgba(0,0,0,0.6)"
+              >
+                {duration}
+              </Heading>
+              <Text color="#E4B2BF" textShadow="0 0 10px rgba(0,0,0,0.6)">
+                Time Left
+              </Text>
+            </Flex>
+          </Stack>
+          <Stack direction="row" justify="center" align="center">
+            {active ? (
+              <>
+                <Input
+                  w={64}
+                  _focus={{ outlineColor: "#E4B2BF" }}
+                  fontWeight="bold"
+                  fontSize="lg"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
+                <Button
+                  bgColor="#E4B2BF"
+                  w={24}
+                  _hover={{ bgColor: "#fff", color: "#E4B2BF" }}
+                  isDisabled={!input || isNaN(+input)}
+                >
+                  Bid
+                </Button>
+              </>
             ) : (
-              <Flex>-</Flex>
+              // <ConnectButton />
+              <></>
             )}
-          </Heading>
-          <Text color="#E4B2BF" textShadow="0 0 10px rgba(0,0,0,0.6)">
-            Highest Bid
-          </Text>
-        </Flex>
-        <Flex direction="column" align="center">
-          <Heading fontFamily="monospace" textShadow="0 0 10px rgba(0,0,0,0.6)">
-            {duration}
-          </Heading>
-          <Text color="#E4B2BF" textShadow="0 0 10px rgba(0,0,0,0.6)">
-            Time Left
-          </Text>
-        </Flex>
-      </Stack>
-      <Stack direction="row" justify="center" align="center">
-        {active ? (
-          <>
-            <Input
-              w={64}
-              _focus={{ outlineColor: "#E4B2BF" }}
-              fontWeight="bold"
-              fontSize="lg"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
-            <Button
-              bgColor="#E4B2BF"
-              w={24}
-              _hover={{ bgColor: "#fff", color: "#E4B2BF" }}
-              isDisabled={!input || isNaN(+input)}
-            >
-              Bid
-            </Button>
-          </>
-        ) : (
-          // <ConnectButton />
-          <></>
-        )}
-      </Stack>
+          </Stack>
+        </>
+      )}
     </Stack>
   );
 };
@@ -208,6 +223,8 @@ const ItemDetails = ({ item, highestBid }: any) => {
 const Item: NextPage = ({ id }: any) => {
   const [item, setItem]: any = useState();
   const [bids, setBids]: any = useState([]);
+
+  const isMobile = useBreakpointValue([true, true, false]);
 
   useEffect(() => {
     (async () => setItem(await fetchItem(id)))();
@@ -217,41 +234,30 @@ const Item: NextPage = ({ id }: any) => {
   return (
     <Layout
       right={
-        item && (
-          <Box position="fixed" className="flip-card" w="xl" h="xl">
-            <Box className="flip-card-inner">
-              <Box className="flip-card-front">
-                <Polaroid item={item} bids={bids} isFull />
-              </Box>
-              <Box className="flip-card-back">
-                <Polaroid bids={bids} isFull>
-                  <Text>{item.description}</Text>
-                </Polaroid>
-              </Box>
-            </Box>
-          </Box>
+        item &&
+        !isMobile && (
+          <PoemImage
+            poem={allPoems.find(
+              ({ image }) => image === `/poems/${item.name}.png`
+            )}
+          />
         )
       }
     >
       {item && <ItemDetails item={item} highestBid={bids?.[0]} />}
-      {bids && <Bids bids={bids} />}
+      {/* {bids && <Bids bids={bids} />} */}
+      {item && isMobile && (
+        <PoemImage
+          poem={allPoems.find(
+            ({ image }) => image === `/poems/${item.name}.png`
+          )}
+        />
+      )}
     </Layout>
   );
 };
 
 Item.getInitialProps = async ({ res, query }) => {
-  if (res) {
-    // server
-    res.writeHead(302, {
-      Location: "/",
-    });
-
-    res.end();
-  } else {
-    // client
-    Router.push("/");
-  }
-
   return { id: query.id };
 };
 
