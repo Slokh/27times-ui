@@ -46,13 +46,14 @@ const Home: NextPage = () => {
     md: rightPoems,
   });
 
-  const [items, setItems] = useState([]);
+  // const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    (async () => setItems(await fetchItems()))();
-  }, []);
+  // useEffect(() => {
+  //   (async () => setItems(await fetchItems()))();
+  // }, []);
 
   // if (items?.length) {
+  //   console.log(items);
   //   console.log(
   //     leftPoems.map((poem) => {
   //       const id = poem.image.split("/")[2].split(".png")[0];

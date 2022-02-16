@@ -34,6 +34,10 @@ export const leftPoems = [
   {
     date: "2021-01-02",
     image: "/poems/01.02.21.png",
+    id: "1",
+    description:
+      "I am a creation of Dark Matter\n\nA symphony\nof bad habits\n\nA cacophony\nof delicious talents\n\nStabilized and undermined by my cycle of disorder\nineffebly self destructing, painfully unperceptive\n\nLimited by the needs that make me feel free\nFreed by the limitations that make me feel needs\n\nWhat?\nMight as well keep that there.\n\nDark Matter.\n\nCan you hear me?\n(i’m yelling in my mind)\n\nCan you speak softly?\n(for my fragile heart)\n\nCan you hold me?\n(no, I mean, really. Hold me)\n\nCan you watch me?\n(fall on my sword again and then again)\n\nDid you say yes?\n(nevermind don't tell me)\n\nDark Matter.\n\nWelcome to the Infinity Residence\n(this is my home)\nHave you ever been this deep?\nI am deeper still.\n\nTethered by titanium tightropes\n(this is my hope)\nShould we stay this close?\nI am closer still.\n\nDreams of sparring silver tongues\nTell me why there’s a tightness to your lips?\n(this is my trust)\nI am tighter still.\n\nI’m on to something here\n\nDark Matter.\n\nCheers to you!\n\nLove\n\nTo your Dark Matter!\n\nTo blissfully transmute with enchanting benevolence\nYou make it look so easy (so good too)\n\nI stumble often and skid my knees\nJust to wallow in the wakes of wreckage\n\n\nDark Matter.\n\nTo losing, love!\n\nAll objective sensibility\nAll cloaked loneliness\nAll overwrought escapism\nAll clairvoyant capability\n\nBecause\nWhat the\nFuck!\nDark Matter.\n\nI’ll be the one\nRefusing the lifevest in hopes I drown\nIn infinite and unconditional love\nTo be engulfed by an ocean of darkness\n\nThank you, love!\n\nFor casting illuminating beams across the galaxy that is me\nStill, so much remains to be seen\n\nCosmic uncertainty\nExpansive emptiness\nShadowed serenity\n\n\nWe depart, we return\nWe cease, we remain\nWe bury, we exhume\nWe sow, we reap",
+    name: "01.02.21",
   },
   {
     date: "2021-01-29",
@@ -54,14 +58,26 @@ export const leftPoems = [
   {
     date: "2021-04-13",
     image: "/poems/04.13.21.png",
+    id: "11",
+    description:
+      "with all due respect to the sun\ni think i dread the light of day\nbecause i never felt the warmth on my skin\nthe same way i do\nwith you\nunderneath the moon\non side streets atop rustled sheets\nthe whole city sleeps\nand between the two of us\ni’m the only one that dreams",
+    name: "04.13.21",
   },
   {
     date: "2021-05-08",
     image: "/poems/05.08.21.png",
+    id: "13",
+    description:
+      "365 days, 52 weeks, 12 months, 1 year. i fucking hate numbers and time. half of my dna left me with only 24 years under my belt. a drop in the bucket compared to the time i thought we’d have together.\nfor 24 years, i missed you any moment i wasn’t with you, but this year was different- this year, i’m missing from you and you’ve been missing from me.\ni sometimes did consider giving in to the sadness of a life without you.\nwho could ever love me like you, dad? who could ever celebrate me like you? push me, irritate me, inspire me, encourage me, fight me — like you?\ni wait for you to show up like i would wait for you to show up at basketball games, school plays, saturday afternoons on nantasket beach.\nfor 12 months i’ve waited for you to show up as the sun on my skin when i hang my arm out of the car window. i wait for you to show up and tug at the corners of my mouth like strings on a puppet to make me smile. i wait for you to show up in a dream, on the clouds, at the bottom of an empty bottle... i wait and wait and wait.\nfinally, you show up. you show up as you always did with your big plans, big dreams, big ideas and big ego whispering in my ear to say something, feel something, be something.\ni’ve begged and pleaded and bargained for just one more hug, one more kiss, one more walk together hand in hand.\nbut we are the same, so i know our truth; one more of anything is never enough for us. we dream and scheme, love and fight, plan and procrastinate. over & over & over. no one stops us. they never did, they never could. we never let them before you left, we never will now that you’re gone.\nthe next time i hold you, i know i’ll be home. until then i’ll wait. i’ll wait and i’ll wait and i’ll wait a thousand times more because i know you’re there, but you’re here, too.\nyou weren’t crazy. you were just suffering silently. suffering loudly. outspoken in celebration and silent in suffering",
+    name: "05.08.21",
   },
   {
     date: "2021-06-15",
     image: "/poems/06.15.21.png",
+    id: "15",
+    description:
+      "between us a touch is never more than a gentle reminder\nthat i’m not the one he wants to hold his heart\n\nevery red flag was more captivating than the last\ni guess should’ve known\nhis art was nothing more than a mask\n\npatiently and painfully i chipped away at the paint\ncovering his concrete walls\ndoomed by the reality\nthat i’d be the only one brave enough to fall\n\ni wanted him to have every line and every rhyme\nevery other thought that crossed my mind\n\nbut even with his hands on my body he kept me at a distance\nhe was sick for knowing i was never out of reach\n\nor was i sick?\nbecause even that didn’t stop me from trying\nto carry his broken pieces in my helpless hands\nsmall shards of glass slipped through my panicked grip\neach one digging deeper when it pierced my skin\nforeshadowing this blood-covered love story’s end\n\nit’s true what they say\nidle time is the devil’s play\nand he was programmed to push me away",
+    name: "06.15.21",
   },
   {
     date: "2021-09-01",
@@ -157,14 +173,26 @@ export const rightPoems = [
   {
     date: "2021-03-10",
     image: "/poems/03.10.21.png",
+    id: "10",
+    description:
+      "how long can I hold my love underwater?\nthe earth could fracture, exposing its core\nand still you’d make me burn hotter\n\nperhaps I’ve discovered the remedy for desolation\nlike self expression without the cost of rejection\naugmenting our own reality, an economy of reciprocity\n\nromantic rhapsodies resonate through waves of the metaverse four hours\nsharing our histories of volcanic volatility, partitioned darkness\nethereal ultimatums and colossal contradictions\nlike eclipsing rapture by desire\nor choosing body over mind\n\ndesperate to devour the ingredients I’ve collected\neager to share the dreams i’ve long neglected\nlittle miss whimsical\nonce struggled to stay afloat\nreverend boulder planted in truth\nif he is the largest, pray I be the smallest",
+    name: "03.10.21",
   },
   {
     date: "2021-05-04",
     image: "/poems/05.04.21.png",
+    id: "12",
+    description:
+      "by now you must feel my burning gaze in every mirror you breeze by\nit’s haunting, right?  the way i can make something out of nothing\nand give even less\n\nperhaps it’s the fact that my parts came disassembled\npackaged up in one hot mess\nshipped in a blaze of destruction from east to west\n\nbe patient while i pick your pieces apart in a panic\nwalls might crumble though they once were cast in granite\nand when i find my way to cross the line\ni'll be satisfied just my the ability to make you mine\n\ngoodbye",
+    name: "05.04.21",
   },
   {
     date: "2021-06-10",
     image: "/poems/06.10.21.png",
+    id: "14",
+    description:
+      "welcome home\nto this humble abode\n\nour very own purgatorial paradise where passion is laid to rest\nand every living thing has died a little more since you left\n\n\n\nthe moon watches me bathe while you and the sun drown me in shame\neven with my head submerged i hear myself screaming your name\ndeeper i sink in sadness while you pile rocks on my chest\nsurviving you is both profoundly familiar and cruelly unendurable\n\n\na moment of silence for the lives of mine lost before you\n\nsinners resting (not peacefully)\nhere lies resentment (she looks like my mother)\ngrieving discontentment (that’s from my father)\n\nam i more than a safe space to seek refuge\nfrom your life of rebellion and violence\n\nam i the first to invite you inside\ndespite your impossibly high standards\n\ninsecurity\nfractured heart\nfragility\n\ni’ll never stop believing we could be\n\nknowing of course we couldn’t be",
+    name: "06.10.21",
   },
   {
     date: "2021-08-06",

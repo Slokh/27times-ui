@@ -14,7 +14,7 @@ const _fetch = async (endpoint: string) => {
 };
 
 export const fetchItems = async () => {
-  const response = await _fetch(`${API_BASE}/api/v1/assets${query}`);
+  const response = await _fetch(`${API_BASE}/api/v1/assets${query}&limit=50`);
   if (response.status != 200) {
     return [];
   }
