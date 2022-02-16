@@ -55,7 +55,6 @@ export const Layout = ({ children, right }: any) => {
           <Flex
             bgImage="sidetext.png"
             minW={[0, 0, 16]}
-            minHeight="100%"
             h="100vh"
             position="fixed"
             bgRepeat="no-repeat"
