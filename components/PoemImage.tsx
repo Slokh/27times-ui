@@ -9,8 +9,6 @@ export const PoemImage = ({ poem, onClick }: any) => (
       objectFit="cover"
       objectPosition="0 0"
       maxH="100%"
-      zIndex={0}
-      loading="lazy"
       onClick={onClick}
       cursor="pointer"
       shadow="base"
