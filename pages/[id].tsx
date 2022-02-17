@@ -1,8 +1,10 @@
 import { Layout } from "@27times/components/Layout";
-import { Polaroid } from "@27times/components/Polaroid";
+import { PoemImage } from "@27times/components/PoemImage";
 import { fetchItem, fetchItemBids } from "@27times/utils/api";
+import { injectedConnector } from "@27times/utils/connectors";
+import { allPoems } from "@27times/utils/metadata";
+import { setIsPreviouslyConnected } from "@27times/utils/web3";
 import {
-  Box,
   Button,
   Flex,
   Heading,
@@ -11,18 +13,17 @@ import {
   Stack,
   Text,
   useBreakpointValue,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { formatDistanceStrict, intervalToDuration } from "date-fns";
-import type { NextPage } from "next";
-import { useEffect, useState } from "react";
-import { Web3Provider } from "@ethersproject/providers";
-import { setIsPreviouslyConnected } from "@27times/utils/web3";
-import { injectedConnector } from "@27times/utils/connectors";
 import { isAddress } from "ethers/lib/utils";
+import type { NextPage } from "next";
 import Router from "next/router";
-import { PoemImage } from "@27times/components/PoemImage";
-import { allPoems } from "@27times/utils/metadata";
+import { useEffect, useState } from "react";
+import Lightbox from "react-image-lightbox";
+import "react-image-lightbox/style.css";
 
 const ENSWrapper = ({ address }: any) => {
   const [name, setName] = useState(address);
@@ -152,10 +153,16 @@ const ItemDetails = ({ item, highestBid }: any) => {
   return (
     <Stack w="full" spacing={6} p={6}>
       <Stack>
-        <Heading fontFamily="monospace" textShadow="0 0 10px rgba(0,0,0,0.6)">
+        <Heading
+          fontFamily="monospace"
+          textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
+        >
           {item?.name}
         </Heading>
-        <Text textShadow="0 0 4px rgba(0,0,0,1)" whiteSpace="pre-wrap">
+        <Text
+          textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
+          whiteSpace="pre-wrap"
+        >
           {item?.description}
         </Text>
       </Stack>
@@ -220,36 +227,43 @@ const ItemDetails = ({ item, highestBid }: any) => {
   );
 };
 
-const Item: NextPage = ({ id }: any) => {
-  const [item, setItem]: any = useState();
+const Item: NextPage = ({ poem }: any) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [bids, setBids]: any = useState([]);
 
   const isMobile = useBreakpointValue([true, true, false]);
 
   useEffect(() => {
-    (async () => setItem(await fetchItem(id)))();
-    (async () => setBids(await fetchItemBids(id)))();
-  }, [id]);
+    (async () => setBids(await fetchItemBids(poem.id)))();
+  }, [poem.id]);
 
   return (
     <Layout
       right={
-        item &&
+        poem &&
         !isMobile && (
           <PoemImage
             poem={allPoems.find(
-              ({ image }) => image === `/poems/${item.name}.png`
+              ({ image }) => image === `/poems/${poem.name}.png`
             )}
+            onClick={onOpen}
           />
         )
       }
     >
-      {item && <ItemDetails item={item} highestBid={bids?.[0]} />}
+      {isOpen && (
+        <Lightbox
+          mainSrc={poem.image}
+          onCloseRequest={onClose}
+          imagePadding={50}
+        />
+      )}
+      {poem && <ItemDetails item={poem} highestBid={bids?.[0]} />}
       {/* {bids && <Bids bids={bids} />} */}
-      {item && isMobile && (
+      {poem && isMobile && (
         <PoemImage
           poem={allPoems.find(
-            ({ image }) => image === `/poems/${item.name}.png`
+            ({ image }) => image === `/poems/${poem.name}.png`
           )}
         />
       )}
@@ -258,7 +272,18 @@ const Item: NextPage = ({ id }: any) => {
 };
 
 Item.getInitialProps = async ({ res, query }) => {
-  return { id: query.id };
+  const poem = allPoems.find((poem: any) => poem.id === query.id);
+  if (!poem) {
+    if (res) {
+      res.writeHead(302, {
+        Location: "/",
+      });
+      res.end();
+    } else {
+      Router.push("/");
+    }
+  }
+  return { poem };
 };
 
 export default Item;

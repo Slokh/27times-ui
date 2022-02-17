@@ -1,12 +1,9 @@
 import { Layout } from "@27times/components/Layout";
 import { PoemImage } from "@27times/components/PoemImage";
-import { fetchItems } from "@27times/utils/api";
 import { allPoems, leftPoems, rightPoems } from "@27times/utils/metadata";
 import { Flex, Link, Stack, useBreakpointValue } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
-import "react-image-lightbox/style.css";
 
 const Poem = ({ poem, onClick, isReversed }: any) => (
   <Stack
@@ -34,9 +31,6 @@ const Poem = ({ poem, onClick, isReversed }: any) => (
 );
 
 const Home: NextPage = () => {
-  // const [currentPoem, setCurrentPoem] = useState(0);
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-
   const _leftPoems = useBreakpointValue({
     base: [],
     md: leftPoems,
@@ -46,78 +40,12 @@ const Home: NextPage = () => {
     md: rightPoems,
   });
 
-  // const [items, setItems] = useState([]);
-
-  // useEffect(() => {
-  //   (async () => setItems(await fetchItems()))();
-  // }, []);
-
-  // if (items?.length) {
-  //   console.log(items);
-  //   console.log(
-  //     leftPoems.map((poem) => {
-  //       const id = poem.image.split("/")[2].split(".png")[0];
-
-  //       const item = items.find((i) => i.name === id);
-  //       return {
-  //         ...poem,
-  //         id: item?.token_id,
-  //         description: item?.description,
-  //         name: item?.name,
-  //       };
-  //     })
-  //   );
-  //   console.log(
-  //     rightPoems.map((poem) => {
-  //       const id = poem.image.split("/")[2].split(".png")[0];
-
-  //       const item = items.find((i) => i.name === id);
-  //       return {
-  //         ...poem,
-  //         id: item?.token_id,
-  //         description: item?.description,
-  //         name: item?.name,
-  //       };
-  //     })
-  //   );
-  // }
-
-  // const handlePoemClick = (clicked: string) => {
-  //   setCurrentPoem(allPoems.findIndex(({ date }) => date === clicked));
-  //   onOpen();
-  // };
-
   return (
     <Layout>
-      {/* {isOpen && (
-        <Lightbox
-          mainSrc={allPoems[currentPoem].image}
-          nextSrc={allPoems[(currentPoem + 1) % allPoems.length].image}
-          prevSrc={
-            allPoems[(currentPoem + allPoems.length - 1) % allPoems.length]
-              .image
-          }
-          onCloseRequest={onClose}
-          onMovePrevRequest={() =>
-            setCurrentPoem(
-              (currentPoem + allPoems.length - 1) % allPoems.length
-            )
-          }
-          onMoveNextRequest={() =>
-            setCurrentPoem((currentPoem + 1) % allPoems.length)
-          }
-          enableZoom={false}
-          imagePadding={50}
-        />
-      )} */}
       <Flex w="full" justify="center" pt={8}>
         <Stack align="flex-end">
           {_leftPoems?.map((poem, i) => (
-            <Poem
-              key={i}
-              poem={poem}
-              // onClick={() => handlePoemClick(poem.date)}
-            />
+            <Poem key={i} poem={poem} />
           ))}
         </Stack>
         <Flex
@@ -128,12 +56,7 @@ const Home: NextPage = () => {
         />
         <Stack mt={[0, 0, 64]} align="flex-start">
           {_rightPoems?.map((poem, i) => (
-            <Poem
-              key={i}
-              poem={poem}
-              // onClick={() => handlePoemClick(poem.date)}
-              isReversed
-            />
+            <Poem key={i} poem={poem} isReversed />
           ))}
         </Stack>
       </Flex>

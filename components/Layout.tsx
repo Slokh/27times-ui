@@ -67,7 +67,11 @@ export const Layout = ({ children, right }: any) => {
             align="center"
           >
             <Stack maxW="2xl" align="center">
-              <Image src="header.png" alt="header" />
+              <NextLink href="/" passHref>
+                <Link _hover={{ textDecoration: "none" }}>
+                  <Image src="header.png" alt="header" />
+                </Link>
+              </NextLink>
               <Flex w="full" pt={4} justify="space-around">
                 <Stack direction="row">
                   <NextLink href="https://twitter.com/karsendaily" passHref>
