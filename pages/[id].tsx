@@ -154,8 +154,8 @@ const ItemDetails = ({ item, highestBid }: any) => {
     <Stack w="full" spacing={6} p={6}>
       <Stack>
         <Heading
-          fontFamily="monospace"
-          textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
+          textShadow="0 0 10px rgba(0,0,0,0.6)"
+          fontFamily="Fake Receipt"
         >
           {item?.name}
         </Heading>

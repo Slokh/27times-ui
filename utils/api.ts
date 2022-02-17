@@ -1,7 +1,7 @@
+import { CONTRACT_ADDRESS } from "./constants";
+
 const API_BASE = "https://api.opensea.io";
 const API_KEY = "281e8177c2694d9dbb1e4303599a82bf";
-
-const CONTRACT_ADDRESS = "0x2121bc170a8ef73a5cf576bdf5d55f916d58b18b";
 
 const query = `?asset_contract_address=${CONTRACT_ADDRESS}`;
 

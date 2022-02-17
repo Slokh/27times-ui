@@ -1,27 +1,23 @@
+import { getCountdown } from "@27times/utils";
+import { END_DATE, START_DATE } from "@27times/utils/constants";
 import { Flex, Image, Link, Stack, Text } from "@chakra-ui/react";
-import { intervalToDuration } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
 export const Layout = ({ children, right }: any) => {
-  const [duration, setDuration] = useState("00:00:00");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     let interval = setInterval(() => {
-      let currentDate = new Date();
-      let endDate = new Date(2022, 2, 18);
-
-      const { days, hours, minutes, seconds } = intervalToDuration({
-        start: currentDate,
-        end: endDate,
-      });
-
-      setDuration(
-        `${(days || 0) * 24 + (hours || 0)}:${
-          !minutes || minutes < 10 ? "0" : ""
-        }${minutes}:${!seconds || seconds < 10 ? "0" : ""}${seconds}`
-      );
+      const currentDate = new Date();
+      if (currentDate < START_DATE) {
+        setMessage(
+          `Auctions starting in ${getCountdown(currentDate, START_DATE)}`
+        );
+      } else if (currentDate < END_DATE) {
+        setMessage(`Auctions ending in ${getCountdown(currentDate, END_DATE)}`);
+      }
     }, 1000);
 
     return () => {
@@ -93,7 +89,9 @@ export const Layout = ({ children, right }: any) => {
                   textShadow="0 0 10px rgba(0,0,0,0.6)"
                   color="#E4B2BF"
                   fontFamily="Fake Receipt"
-                >{`Auctions starting in ${duration}`}</Text>
+                >
+                  {message}
+                </Text>
               </Flex>
             </Stack>
             {children}
