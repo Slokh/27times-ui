@@ -74,7 +74,18 @@ const Poem: NextPage = ({ poem }: any) => {
 
   const isMobile = useBreakpointValue([true, true, true, false]);
 
-  const refreshBids = async () => setBids(await fetchItemBids(poem.id));
+  const refreshBids = async (account: any, amount: any, date: any) => {
+    setBids([
+      {
+        maker: {
+          address: account,
+        },
+        base_price: amount * 1e18,
+        listing_time: date,
+      },
+      ...bids,
+    ]);
+  };
 
   useEffect(() => {
     (async () => setBids(await fetchItemBids(poem.id)))();

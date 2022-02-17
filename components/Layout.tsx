@@ -38,7 +38,7 @@ export const Layout = ({ children, message, right }: any) => (
         ></Flex>
         <Stack maxW="4xl" p={4} pt={6} pl={[4, 4, 32]} align="center">
           <Stack maxW="2xl" align="center">
-            <NextLink href="/" passHref>
+            <NextLink href="https://www.27times.xyz" passHref>
               <Link _hover={{ textDecoration: "none" }}>
                 <Image src="header.png" alt="header" />
               </Link>

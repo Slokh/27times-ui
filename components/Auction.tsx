@@ -204,7 +204,7 @@ export const AuctionDetails = ({ poem, bids, refreshBids }: any) => {
     if (error) {
       setError(error);
     } else {
-      setTimeout(refreshBids, 3000);
+      refreshBids(account, parseFloat(input), new Date().getTime() / 1000);
     }
   };
 
