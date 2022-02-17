@@ -3,7 +3,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import "./flip.css";
+import "./style.css";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (

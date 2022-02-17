@@ -3,7 +3,7 @@ import { Box, Image } from "@chakra-ui/react";
 export const PoemImage = ({ poem, onClick }: any) => (
   <Box>
     <Image
-      w={64}
+      maxW={[64, 80, 80, 80, 80, 96]}
       src={poem.image}
       alt={poem.date}
       objectFit="cover"

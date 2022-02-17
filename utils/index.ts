@@ -1,6 +1,6 @@
 import { intervalToDuration } from "date-fns";
 
-export const getCountdown = (start: Date, end: Date) => {
+export const getCountdown = (start: number, end: number) => {
   const { days, hours, minutes, seconds } = intervalToDuration({ start, end });
 
   return `${(days || 0) * 24 + (hours || 0)}:${

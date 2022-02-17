@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "Merchant Copy Wide";
+  src: url("/fonts/Merchant Copy Wide.ttf");
+}
+
+@font-face {
+  font-family: "Fake Receipt";
+  src: url("/fonts/fake receipt.ttf");
+}
+
+::selection {
+  background-color: #e4b2bf;
+}
