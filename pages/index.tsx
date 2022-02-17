@@ -18,7 +18,12 @@ const Poem = ({ poem, onClick, isReversed }: any) => (
     pt={16}
     pb={[0, 0, isReversed ? 32 : 16]}
     w={[72, 72, 96, 96]}
-    align={["center", "center", isReversed ? "flex-end" : "flex-start"]}
+    align={[
+      "center",
+      "center",
+      "center",
+      isReversed ? "flex-end" : "flex-start",
+    ]}
   >
     <Flex
       w="full"

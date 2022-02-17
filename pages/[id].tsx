@@ -89,6 +89,7 @@ const Poem: NextPage = ({ poem }: any) => {
     <PoemImage
       poem={allPoems.find(({ image }) => image === `/poems/${poem.name}.png`)}
       onClick={onOpen}
+      maxW={96}
     />
   );
 
@@ -111,6 +112,7 @@ const Poem: NextPage = ({ poem }: any) => {
           poem={allPoems.find(
             ({ image }) => image === `/poems/${poem.name}.png`
           )}
+          maxW={[72, 96]}
         />
       )}
     </Layout>
