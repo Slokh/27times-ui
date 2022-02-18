@@ -1,18 +1,10 @@
 import { CountdownTimer } from "@27times/components/Auction";
 import { Layout } from "@27times/components/Layout";
 import { useBids } from "@27times/context/bids";
-import { getCountdown } from "@27times/utils";
-import {
-  END_DATE,
-  isAuctionEnding,
-  isAuctionStarting,
-  START_DATE,
-} from "@27times/utils/constants";
 import { allPoems } from "@27times/utils/metadata";
 import { Flex, Image, Stack, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
 
 const Poem = ({ poem }: any) => {
   const { getBidsForId } = useBids();
@@ -49,26 +41,8 @@ const Poem = ({ poem }: any) => {
 };
 
 const Home: NextPage = () => {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    let interval = setInterval(() => {
-      if (isAuctionStarting) {
-        setMessage(
-          `Auctions starting in ${getCountdown(Date.now(), START_DATE)}`
-        );
-      } else if (isAuctionEnding) {
-        setMessage(`Auctions ending in ${getCountdown(Date.now(), END_DATE)}`);
-      }
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
   return (
-    <Layout message={message}>
+    <Layout message={"Auctions Live!"}>
       <Stack
         w="full"
         direction="row"
