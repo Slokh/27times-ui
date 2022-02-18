@@ -101,23 +101,6 @@ export const getPreviousConnectorType = () => {
   return window.localStorage.getItem("previousConnectorType") || "";
 };
 
-export const setIsPreviouslyConnected = (
-  value: boolean,
-  connectorType = "injected"
-): void => {
-  if (typeof window === undefined) {
-    return;
-  }
-  if (!value) {
-    window.localStorage.clear();
-  }
-  window.localStorage.setItem("previousConnectorType", connectorType);
-  return window.localStorage.setItem(
-    "previouslyConnected",
-    JSON.stringify(value)
-  );
-};
-
 export const setPreviousChainId = (chainId: number | string): void => {
   if (typeof window === undefined) {
     return;

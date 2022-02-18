@@ -8,7 +8,6 @@ import {
   isAuctionStarting,
   START_DATE,
 } from "@27times/utils/constants";
-import { setIsPreviouslyConnected } from "@27times/utils/web3";
 import {
   Button,
   Flex,
@@ -58,28 +57,12 @@ const ENSWrapper = ({ address }: any) => {
 };
 
 const ConnectButton = () => {
-  const { activate, deactivate, chainId } = useWeb3React<Web3Provider>();
-
-  const isWrongNetwork = chainId && chainId !== 1;
-
-  const disconnect = () => {
-    close();
-    setTimeout(() => {
-      setIsPreviouslyConnected(false);
-      deactivate();
-      window.location.reload();
-    }, 100);
-  };
+  const { activate } = useWeb3React<Web3Provider>();
 
   const connectMetamask = () => {
-    if (isWrongNetwork) {
-      disconnect();
-    } else {
-      close();
-      setTimeout(() => {
-        activate(injectedConnector);
-      }, 100);
-    }
+    setTimeout(() => {
+      activate(injectedConnector);
+    }, 100);
   };
 
   return (
