@@ -59,7 +59,7 @@ export const makeBid = async (
       asset: {
         tokenId: tokenId,
         tokenAddress: CONTRACT_ADDRESS,
-        schemaName: WyvernSchemaName.ERC1155,
+        schemaName: WyvernSchemaName.ERC721,
       },
       accountAddress: address,
       startAmount: amount,
