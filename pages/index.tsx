@@ -1,14 +1,12 @@
 import { CountdownTimer } from "@27times/components/Auction";
 import { Layout } from "@27times/components/Layout";
-import { useBids } from "@27times/context/bids";
-import { allPoems } from "@27times/utils/metadata";
+import { usePoems } from "@27times/context/bids";
 import { Flex, Image, Stack, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
 
 const Poem = ({ poem }: any) => {
-  const { getBidsForId } = useBids();
-  const bids = getBidsForId(poem.id);
+  const bids = poem.bids;
 
   const highestBid = bids?.length ? bids[0].bid_amount / 1e18 : 0;
 
@@ -41,6 +39,7 @@ const Poem = ({ poem }: any) => {
 };
 
 const Home: NextPage = () => {
+  const { poems } = usePoems();
   return (
     <Layout message={"Auctions Live!"}>
       <Stack
@@ -51,7 +50,7 @@ const Home: NextPage = () => {
         justify="center"
         shouldWrapChildren
       >
-        {allPoems.map((poem: any, i: number) => (
+        {poems.map((poem: any, i: number) => (
           <Poem key={i} poem={poem} />
         ))}
       </Stack>

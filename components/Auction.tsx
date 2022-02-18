@@ -196,11 +196,12 @@ export const CountdownTimer = ({ bids, rawDuration }: any) => {
   );
 };
 
-export const AuctionDetails = ({ poem, bids }: any) => {
+export const AuctionDetails = ({ poem }: any) => {
   const [input, setInput] = useState("");
   const { active, library, account } = useWeb3React<Web3Provider>();
   const [error, setError] = useState("");
   const [warning, setWarning] = useState("");
+  const bids = poem.bids;
 
   const highestBid = bids?.length ? bids[0].bid_amount / 1e18 : 0;
 

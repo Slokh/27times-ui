@@ -1,4 +1,4 @@
-import { BidsProvider } from "@27times/context/bids";
+import { PoemsProvider } from "@27times/context/bids";
 import { getLibrary } from "@27times/utils/web3";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "@web3-react/core";
@@ -63,9 +63,9 @@ const App = ({ Component, pageProps }: AppProps) => {
         />
       </Head>
       <Web3ReactProvider getLibrary={getLibrary}>
-        <BidsProvider>
+        <PoemsProvider>
           <Component {...pageProps} />
-        </BidsProvider>
+        </PoemsProvider>
       </Web3ReactProvider>
     </ChakraProvider>
   );

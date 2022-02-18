@@ -29,7 +29,6 @@ export async function fetchWithTimeout(
           .getItem(input)
           .catch(() => undefined);
         if (cachedResults) {
-          console.log("Timed out, returning last cached data for", input);
           resolve(
             new Response(JSON.stringify(cachedResults), {
               status: 200,
@@ -145,9 +144,7 @@ export const switchWalletNetwork = async (
     if (onSuccess) {
       onSuccess();
     }
-  } catch (switchError: any) {
-    console.log(switchError);
-  }
+  } catch (switchError: any) {}
 };
 
 // window.ethereum is injected by providers even if the user is not connected to our app

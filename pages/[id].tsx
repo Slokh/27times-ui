@@ -5,7 +5,7 @@ import {
 } from "@27times/components/Auction";
 import { Layout } from "@27times/components/Layout";
 import { PoemImage } from "@27times/components/PoemImage";
-import { useBids } from "@27times/context/bids";
+import { usePoem } from "@27times/context/bids";
 import { isAuctionStarting } from "@27times/utils/constants";
 import { allPoems } from "@27times/utils/metadata";
 import {
@@ -68,16 +68,15 @@ const Tabs = ({ options }: any) => {
   );
 };
 
-const Poem: NextPage = ({ poem }: any) => {
+const Poem: NextPage = ({ id }: any) => {
+  const { poem } = usePoem(id);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { getBidsForId } = useBids();
-  const bids = getBidsForId(poem.id);
 
   const isMobile = useBreakpointValue([true, true, true, false]);
 
   let options = [{ label: "Poem", value: <PoemDetails poem={poem} /> }];
-  if (!isAuctionStarting && bids?.length) {
-    options.push({ label: "Top Bids", value: <BidsTable bids={bids} /> });
+  if (!isAuctionStarting && poem?.bids?.length) {
+    options.push({ label: "Top Bids", value: <BidsTable bids={poem?.bids} /> });
   }
 
   const right = isMobile ? undefined : (
@@ -97,8 +96,8 @@ const Poem: NextPage = ({ poem }: any) => {
           imagePadding={50}
         />
       )}
-      <CountdownTimer bids={bids} />
-      {!isAuctionStarting && <AuctionDetails poem={poem} bids={bids} />}
+      <CountdownTimer bids={poem?.bids} />
+      {!isAuctionStarting && <AuctionDetails poem={poem} />}
       <Tabs options={options} />
       {isMobile && (
         <PoemImage
@@ -124,7 +123,7 @@ Poem.getInitialProps = async ({ res, query }) => {
       Router.push("/");
     }
   }
-  return { poem };
+  return { id: poem?.id };
 };
 
 export default Poem;

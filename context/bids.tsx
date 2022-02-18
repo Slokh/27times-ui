@@ -1,4 +1,5 @@
 import { fetchBids } from "@27times/utils/api";
+import { allPoems } from "@27times/utils/metadata";
 import {
   createContext,
   ReactNode,
@@ -8,16 +9,15 @@ import {
 } from "react";
 
 type State = {
-  bids: any;
-  getBidsForId: any;
+  poems: any;
 };
 
-type BidsContextType = State | undefined;
-type BidsProviderProps = { basePath?: string; children: ReactNode };
+type PoemsContextType = State | undefined;
+type PoemsProviderProps = { basePath?: string; children: ReactNode };
 
-const BidsContext = createContext<BidsContextType>(undefined);
+const PoemsContext = createContext<PoemsContextType>(undefined);
 
-export const BidsProvider = ({ children }: BidsProviderProps) => {
+export const PoemsProvider = ({ children }: PoemsProviderProps) => {
   const [bids, setBids] = useState([]);
 
   useEffect(() => {
@@ -29,28 +29,39 @@ export const BidsProvider = ({ children }: BidsProviderProps) => {
       .filter(({ asset }: any) => asset.token_id === id)
       .sort((a: any, b: any) => b.bid_amount - a.bid_amount);
 
-  // const getBidsForId = (id: any) =>
-  //   bids
-  //     .filter(
-  //       ({ asset }: any) =>
-  //         asset.token_id ===
-  //         "23163376450661353913759955999481409998945686505485717428581112706063006695425"
-  //     )
-  //     .sort((a: any, b: any) => b.bid_amount - a.bid_amount);
-
   return (
-    <BidsContext.Provider value={{ bids, getBidsForId }}>
+    <PoemsContext.Provider
+      value={{
+        poems: allPoems
+          .map((poem) => {
+            const bids: any = getBidsForId(poem.id);
+
+            return {
+              ...poem,
+              bids,
+              highestBid: bids?.length ? bids[0].bid_amount / 1e18 : 0,
+            };
+          })
+          .sort((a: any, b: any) => b.highestBid - a.highestBid),
+      }}
+    >
       {children}
-    </BidsContext.Provider>
+    </PoemsContext.Provider>
   );
 };
 
-export const useBids = () => {
-  const context = useContext(BidsContext);
+export const usePoems = () => {
+  const context = useContext(PoemsContext);
 
   if (context === undefined) {
-    throw new Error("useBids must be used within a BidsProvider");
+    throw new Error("usePoems must be used within a PoemsProvider");
   }
 
   return context;
+};
+
+export const usePoem = (id: any) => {
+  const { poems } = usePoems();
+
+  return { poem: poems.find((poem: any) => poem.id === id) };
 };
