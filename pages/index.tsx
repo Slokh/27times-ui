@@ -1,5 +1,6 @@
+import { CountdownTimer } from "@27times/components/Auction";
 import { Layout } from "@27times/components/Layout";
-import { PoemImage } from "@27times/components/PoemImage";
+import { useBids } from "@27times/context/bids";
 import { getCountdown } from "@27times/utils";
 import {
   END_DATE,
@@ -7,57 +8,51 @@ import {
   isAuctionStarting,
   START_DATE,
 } from "@27times/utils/constants";
-import { allPoems, leftPoems, rightPoems } from "@27times/utils/metadata";
-import { Flex, Link, Stack, useBreakpointValue } from "@chakra-ui/react";
+import { allPoems } from "@27times/utils/metadata";
+import { Flex, Image, Stack, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
-const Poem = ({ poem, onClick, isReversed }: any) => (
-  <Stack
-    pt={16}
-    pb={[0, 0, isReversed ? 32 : 16]}
-    w={[72, 72, 96, 96]}
-    align={[
-      "center",
-      "center",
-      "center",
-      isReversed ? "flex-end" : "flex-start",
-    ]}
-  >
-    <Flex
-      w="full"
-      borderBottomColor="#E4B2BF"
-      borderBottomWidth={1.5}
-      fontSize="lg"
-      fontFamily="monospace"
-      textShadow="0 0 10px rgba(0,0,0,0.6)"
-      whiteSpace="nowrap"
-      justify={isReversed ? "flex-end" : "flex-start"}
-    />
-    <NextLink href={`/${poem.id}`} passHref>
-      <Link>
-        <PoemImage poem={poem} onClick={onClick} />
-      </Link>
-    </NextLink>
-  </Stack>
-);
+const Poem = ({ poem }: any) => {
+  const { getBidsForId } = useBids();
+  const bids = getBidsForId(poem.id);
+
+  const highestBid = bids?.length ? bids[0].bid_amount / 1e18 : 0;
+
+  return (
+    <Stack p={8}>
+      <NextLink href={`/${poem.id}`}>
+        <Image
+          src={poem.image}
+          alt={poem.name}
+          h={64}
+          w={64}
+          objectFit="cover"
+          objectPosition="0 0"
+          cursor="pointer"
+          shadow="base"
+          transition="all 0.2s ease"
+          _hover={{
+            shadow: "0 0 10px #E4B2BF",
+          }}
+        />
+      </NextLink>
+      <Flex justify="space-between">
+        <Text fontFamily="Fake Receipt" textShadow="0 0 10px rgba(0,0,0,0.6)">
+          {`${highestBid.toFixed(3)} ETH`}
+        </Text>
+        <CountdownTimer bids={bids} rawDuration />
+      </Flex>
+    </Stack>
+  );
+};
 
 const Home: NextPage = () => {
   const [message, setMessage] = useState("");
 
-  const _leftPoems = useBreakpointValue({
-    base: [],
-    md: leftPoems,
-  });
-  const _rightPoems = useBreakpointValue({
-    base: allPoems,
-    md: rightPoems,
-  });
-
   useEffect(() => {
     let interval = setInterval(() => {
-      const currentDate = new Date();
       if (isAuctionStarting) {
         setMessage(
           `Auctions starting in ${getCountdown(Date.now(), START_DATE)}`
@@ -74,24 +69,18 @@ const Home: NextPage = () => {
 
   return (
     <Layout message={message}>
-      <Flex w="full" justify="center" pt={8}>
-        <Stack align="flex-end">
-          {_leftPoems?.map((poem, i) => (
-            <Poem key={i} poem={poem} />
-          ))}
-        </Stack>
-        <Flex
-          borderColor="#E4B2BF"
-          borderWidth={1}
-          borderRadius={64}
-          borderStyle="dashed"
-        />
-        <Stack mt={[0, 0, 64]} align="flex-start">
-          {_rightPoems?.map((poem, i) => (
-            <Poem key={i} poem={poem} isReversed />
-          ))}
-        </Stack>
-      </Flex>
+      <Stack
+        w="full"
+        direction="row"
+        spacing={0}
+        wrap="wrap"
+        justify="center"
+        shouldWrapChildren
+      >
+        {allPoems.map((poem: any, i: number) => (
+          <Poem key={i} poem={poem} />
+        ))}
+      </Stack>
     </Layout>
   );
 };

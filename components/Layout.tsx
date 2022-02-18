@@ -26,6 +26,7 @@ export const Layout = ({ children, message, right }: any) => (
         fontWeight="semibold"
         color="#fff"
         position="relative"
+        p={[0, 0, 8]}
       >
         <Flex
           bgImage="sidetext.png"
@@ -36,7 +37,7 @@ export const Layout = ({ children, message, right }: any) => (
           bgRepeat="no-repeat"
           bgAttachment="fixed"
         ></Flex>
-        <Stack maxW="4xl" p={4} pt={6} pl={[4, 4, 32]} align="center">
+        <Stack p={[4, 4, 8]} pt={[4, 4, 0]} align="center">
           <Stack maxW="2xl" align="center">
             <NextLink href="https://www.27times.xyz" passHref>
               <Link _hover={{ textDecoration: "none" }}>

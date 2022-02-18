@@ -5,11 +5,7 @@ import { CONTRACT_ADDRESS } from "./constants";
 const API_BASE = "https://api.opensea.io";
 const API_KEY = "281e8177c2694d9dbb1e4303599a82bf";
 
-const query = `?asset_contract_address=${CONTRACT_ADDRESS}`;
-
-const TEST_CONTRACT_ADDRESS = "0x495f947276749ce646f68ac8c248420045cb7b5e";
-const TEST_TOKEN_ID =
-  "23163376450661353913759955999481409998945686505485717428581112706063006695425";
+const COLLECTION = "27-times-by-karsen-daily";
 
 const _fetch = async (endpoint: string) => {
   return await fetch(endpoint, {
@@ -19,53 +15,28 @@ const _fetch = async (endpoint: string) => {
   });
 };
 
-export const fetchItems = async () => {
-  const response = await _fetch(`${API_BASE}/api/v1/assets${query}&limit=50`);
-  if (response.status != 200) {
-    return [];
-  }
-
-  const data = await response.json();
-  return data.assets;
-};
-
-export const fetchItem = async (tokenId: string) => {
-  const response = await _fetch(
-    `${API_BASE}/api/v1/assets?asset_contract_address=${CONTRACT_ADDRESS}&token_ids=${tokenId}`
-  );
-  if (response.status != 200) {
-    return {};
-  }
-
-  const data = await response.json();
-  return data?.assets?.length ? data.assets[0] : {};
-};
-
-export const fetchItemBids = async (tokenId: string) => {
-  // const response = await _fetch(
-  //   `${API_BASE}/wyvern/v1/orders?asset_contract_address=${CONTRACT_ADDRESS}&token_id=${tokenId}&side=0&order_by=eth_price&order_direction=desc`
-  // );
-  const response = await _fetch(
-    `${API_BASE}/wyvern/v1/orders?asset_contract_address=${TEST_CONTRACT_ADDRESS}&token_id=${TEST_TOKEN_ID}&side=0&order_by=eth_price&order_direction=desc`
+export const fetchBids = async () => {
+  let response = await _fetch(
+    `${API_BASE}/api/v1/events?collection_slug=${COLLECTION}&event_type=offer_entered&only_opensea=true`
   );
   if (response.status != 200) {
     return [];
   }
 
-  const data = await response.json();
-  return data.orders;
-};
+  let data = await response.json();
+  let bids = data.asset_events;
 
-export const fetchTopBids = async () => {
-  const response = await _fetch(
-    `${API_BASE}/wyvern/v1/orders${query}&side=0&order_by=eth_price&order_direction=desc`
-  );
-  if (response.status != 200) {
-    return [];
+  while (data.next) {
+    response = await _fetch(
+      data.next
+        .replace("http://api-web1", "https://api")
+        .replace("http://api-web2", "https://api")
+    );
+    data = await response.json();
+    bids = bids.concat(data.asset_events);
   }
 
-  const data = await response.json();
-  return data.orders;
+  return bids;
 };
 
 export const makeBid = async (
@@ -83,21 +54,11 @@ export const makeBid = async (
     apiKey: API_KEY,
   });
 
-  console.log({
-    asset: {
-      tokenId: TEST_TOKEN_ID,
-      tokenAddress: TEST_CONTRACT_ADDRESS,
-      schemaName: WyvernSchemaName.ERC1155,
-    },
-    accountAddress: address,
-    startAmount: amount,
-  });
-
   try {
     await seaport.createBuyOrder({
       asset: {
-        tokenId: TEST_TOKEN_ID,
-        tokenAddress: TEST_CONTRACT_ADDRESS,
+        tokenId: tokenId,
+        tokenAddress: CONTRACT_ADDRESS,
         schemaName: WyvernSchemaName.ERC1155,
       },
       accountAddress: address,

@@ -14,6 +14,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   Input,
   Link,
   Stack,
@@ -29,6 +30,10 @@ import {
 import { isAddress } from "ethers/lib/utils";
 import { useEffect, useState } from "react";
 import "react-image-lightbox/style.css";
+
+const getDate = (timestamp: number) =>
+  new Date(timestamp).getTime() -
+  new Date(timestamp).getTimezoneOffset() * 60000;
 
 const ENSWrapper = ({ address }: any) => {
   const [name, setName] = useState(address);
@@ -95,40 +100,40 @@ export const BidsTable = ({ bids }: any) => (
         <Flex direction="column">
           <Link
             _hover={{ color: "#fff" }}
-            href={`https://opensea.io/${bid.maker.address}`}
+            href={`https://opensea.io/${bid.from_account.address}`}
             target="_blank"
             textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
           >
-            <ENSWrapper address={bid.maker.address} />
+            <ENSWrapper address={bid.from_account.address} />
           </Link>
           <Text
             color="#E4B2BF"
             textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
           >
-            {formatDistanceStrict(
-              new Date(bid.listing_time * 1000),
-              new Date(),
-              { addSuffix: true }
-            )}
+            {formatDistanceStrict(getDate(bid.created_date), new Date(), {
+              addSuffix: true,
+            })}
           </Text>
         </Flex>
         <Text
           fontFamily="Fake Receipt"
           textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
-        >{`${(bid.base_price / 1e18).toFixed(3)} ETH`}</Text>
+        >{`${(bid.bid_amount / 1e18).toFixed(3)} ETH`}</Text>
       </Flex>
     ))}
   </Stack>
 );
 
-export const CountdownTimer = ({ bids }: any) => {
+export const CountdownTimer = ({ bids, rawDuration }: any) => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     let interval = setInterval(() => {
       if (isAuctionStarting) {
         setMessage(
-          `Auction starting in ${getCountdown(Date.now(), START_DATE)}`
+          rawDuration
+            ? ""
+            : `Auction starting in ${getCountdown(Date.now(), START_DATE)}`
         );
       } else {
         let endDate = END_DATE;
@@ -136,44 +141,48 @@ export const CountdownTimer = ({ bids }: any) => {
         const previousBid = bids?.[1];
         if (!isAuctionEnding) {
           if (!lastBid) {
-            setMessage("Auction ended without winner");
+            setMessage(rawDuration ? "Ended" : "Auction ended without winner");
             return;
           } else if (
             !previousBid ||
-            previousBid.listing_time * 1000 <= endDate
+            getDate(previousBid.created_date) <= endDate
           ) {
-            setMessage("Auction ended");
+            setMessage(rawDuration ? "Ended" : "Auction ended");
             return;
           } else {
-            endDate = previousBid.listing_time * 1000;
+            endDate = getDate(previousBid.created_date);
           }
         }
 
         if (lastBid) {
-          const lastBidDate = lastBid.listing_time * 1000;
+          const lastBidDate = getDate(lastBid.created_date);
           const minutes = Math.abs(differenceInMinutes(endDate, lastBidDate));
 
           if (endDate < lastBidDate && minutes > EXTENSION_AMOUNT) {
-            setMessage("Auction ended");
+            setMessage(rawDuration ? "Ended" : "Auction ended");
             return;
           }
 
           if (lastBidDate < endDate && minutes < EXTENSION_AMOUNT) {
             endDate = addMinutes(
-              lastBid.listing_time * 1000,
+              getDate(lastBid.created_date),
               EXTENSION_AMOUNT
             ).getTime();
           }
         }
 
-        setMessage(`Auction ending in ${getCountdown(Date.now(), endDate)}`);
+        setMessage(
+          rawDuration
+            ? getCountdown(Date.now(), endDate)
+            : `Auction ending in ${getCountdown(Date.now(), endDate)}`
+        );
       }
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [bids]);
+  }, [bids, rawDuration]);
 
   return (
     <Text
@@ -187,12 +196,13 @@ export const CountdownTimer = ({ bids }: any) => {
   );
 };
 
-export const AuctionDetails = ({ poem, bids, refreshBids }: any) => {
+export const AuctionDetails = ({ poem, bids }: any) => {
   const [input, setInput] = useState("");
   const { active, library, account } = useWeb3React<Web3Provider>();
   const [error, setError] = useState("");
+  const [warning, setWarning] = useState("");
 
-  const highestBid = bids?.length ? bids[0].base_price / 1e18 : 0;
+  const highestBid = bids?.length ? bids[0].bid_amount / 1e18 : 0;
 
   const handleBid = async () => {
     const error = await makeBid(
@@ -204,7 +214,7 @@ export const AuctionDetails = ({ poem, bids, refreshBids }: any) => {
     if (error) {
       setError(error);
     } else {
-      refreshBids(account, parseFloat(input), new Date().getTime() / 1000);
+      setWarning("May take up to a minute to update");
     }
   };
 
@@ -221,7 +231,7 @@ export const AuctionDetails = ({ poem, bids, refreshBids }: any) => {
           </Text>
           <Text color="#E4B2BF" textShadow="0 0 10px rgba(0,0,0,0.6)">
             {highestBid ? (
-              <ENSWrapper address={bids[0].maker.address} />
+              <ENSWrapper address={bids[0].from_account.address} />
             ) : (
               "no bids yet"
             )}
@@ -239,20 +249,28 @@ export const AuctionDetails = ({ poem, bids, refreshBids }: any) => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     textAlign="right"
+                    isDisabled={!!warning}
                   />
                   <Button
                     bgColor="#E4B2BF"
                     w={24}
                     _hover={{ bgColor: "#fff", color: "#E4B2BF" }}
                     isDisabled={
-                      !input || isNaN(+input) || parseFloat(input) <= highestBid
+                      !input ||
+                      isNaN(+input) ||
+                      parseFloat(input) <= highestBid ||
+                      !!warning
                     }
                     onClick={handleBid}
                   >
                     Bid
                   </Button>
                 </Stack>
-                <FormErrorMessage>{error}</FormErrorMessage>
+                {!error ? (
+                  <FormHelperText color="#fff">{warning}</FormHelperText>
+                ) : (
+                  <FormErrorMessage>{error}</FormErrorMessage>
+                )}
               </FormControl>
             </>
           ) : (

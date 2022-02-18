@@ -5,7 +5,7 @@ import {
 } from "@27times/components/Auction";
 import { Layout } from "@27times/components/Layout";
 import { PoemImage } from "@27times/components/PoemImage";
-import { fetchItemBids } from "@27times/utils/api";
+import { useBids } from "@27times/context/bids";
 import { isAuctionStarting } from "@27times/utils/constants";
 import { allPoems } from "@27times/utils/metadata";
 import {
@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Router from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 
@@ -70,26 +70,10 @@ const Tabs = ({ options }: any) => {
 
 const Poem: NextPage = ({ poem }: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [bids, setBids]: any = useState([]);
+  const { getBidsForId } = useBids();
+  const bids = getBidsForId(poem.id);
 
   const isMobile = useBreakpointValue([true, true, true, false]);
-
-  const refreshBids = async (account: any, amount: any, date: any) => {
-    setBids([
-      {
-        maker: {
-          address: account,
-        },
-        base_price: amount * 1e18,
-        listing_time: date,
-      },
-      ...bids,
-    ]);
-  };
-
-  useEffect(() => {
-    (async () => setBids(await fetchItemBids(poem.id)))();
-  }, [poem.id]);
 
   let options = [{ label: "Poem", value: <PoemDetails poem={poem} /> }];
   if (!isAuctionStarting && bids?.length) {
@@ -114,9 +98,7 @@ const Poem: NextPage = ({ poem }: any) => {
         />
       )}
       <CountdownTimer bids={bids} />
-      {!isAuctionStarting && (
-        <AuctionDetails poem={poem} bids={bids} refreshBids={refreshBids} />
-      )}
+      {!isAuctionStarting && <AuctionDetails poem={poem} bids={bids} />}
       <Tabs options={options} />
       {isMobile && (
         <PoemImage
