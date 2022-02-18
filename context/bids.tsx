@@ -24,19 +24,19 @@ export const BidsProvider = ({ children }: BidsProviderProps) => {
     (async () => setBids(await fetchBids()))();
   }, []);
 
-  // const getBidsForId = (id: any) =>
-  //   bids
-  //     .filter(({ asset }: any) => asset.token_id === id)
-  //     .sort((a: any, b: any) => b.bid_amount - a.bid_amount);
-
   const getBidsForId = (id: any) =>
     bids
-      .filter(
-        ({ asset }: any) =>
-          asset.token_id ===
-          "23163376450661353913759955999481409998945686505485717428581112706063006695425"
-      )
+      .filter(({ asset }: any) => asset.token_id === id)
       .sort((a: any, b: any) => b.bid_amount - a.bid_amount);
+
+  // const getBidsForId = (id: any) =>
+  //   bids
+  //     .filter(
+  //       ({ asset }: any) =>
+  //         asset.token_id ===
+  //         "23163376450661353913759955999481409998945686505485717428581112706063006695425"
+  //     )
+  //     .sort((a: any, b: any) => b.bid_amount - a.bid_amount);
 
   return (
     <BidsContext.Provider value={{ bids, getBidsForId }}>
