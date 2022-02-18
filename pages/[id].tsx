@@ -8,11 +8,14 @@ import { PoemImage } from "@27times/components/PoemImage";
 import { usePoem } from "@27times/context/bids";
 import { isAuctionStarting } from "@27times/utils/constants";
 import { allPoems } from "@27times/utils/metadata";
+import { QuestionIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Heading,
+  Link,
   Stack,
   Text,
+  Tooltip,
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -96,7 +99,33 @@ const Poem: NextPage = ({ id }: any) => {
           imagePadding={50}
         />
       )}
-      <CountdownTimer bids={poem?.bids} />
+      <Stack align="center">
+        <CountdownTimer bids={poem?.bids} />
+        <Stack direction="row" align="center">
+          <Link
+            isExternal
+            textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
+            href={`https://opensea.io/assets/0x2121bc170a8ef73a5cf576bdf5d55f916d58b18b/${poem.id}`}
+            _hover={{
+              textDecoration: "none",
+            }}
+          >
+            View on OpenSea
+          </Link>
+          <Tooltip
+            label="If you're facing issues, you can make an offer on OpenSea too!"
+            fontSize="sm"
+            fontFamily="monospace"
+            fontWeight="semibold"
+            textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
+            textAlign="center"
+            p={2}
+            borderRadius={4}
+          >
+            <QuestionIcon />
+          </Tooltip>
+        </Stack>
+      </Stack>
       {!isAuctionStarting && <AuctionDetails poem={poem} />}
       <Tabs options={options} />
       {isMobile && (
