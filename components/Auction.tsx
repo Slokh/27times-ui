@@ -25,6 +25,7 @@ import {
   addMinutes,
   differenceInMinutes,
   formatDistanceStrict,
+  subMinutes,
 } from "date-fns";
 import { isAddress } from "ethers/lib/utils";
 import { useEffect, useState } from "react";
@@ -121,37 +122,36 @@ export const CountdownTimer = ({ bids, rawDuration }: any) => {
       } else {
         let endDate = END_DATE;
         const lastBid = bids?.[0];
-        const previousBid = bids?.[1];
-        if (!isAuctionEnding) {
-          if (!lastBid) {
-            setMessage(rawDuration ? "Ended" : "Auction ended without winner");
-            return;
-          } else if (
-            !previousBid ||
-            getDate(previousBid.created_date) <= endDate
-          ) {
-            setMessage(rawDuration ? "Ended" : "Auction ended");
-            return;
-          } else {
-            endDate = getDate(previousBid.created_date);
-          }
+
+        // no winner
+        if (!isAuctionEnding && !lastBid) {
+          setMessage(rawDuration ? "Ended" : "Auction ended");
+          return;
         }
 
-        if (lastBid) {
-          const lastBidDate = getDate(lastBid.created_date);
-          const minutes = Math.abs(differenceInMinutes(endDate, lastBidDate));
+        // winner, no extension
+        const lastBidTime = getDate(lastBid.created_date);
+        const latestDefaultBidTime = subMinutes(
+          endDate,
+          EXTENSION_AMOUNT
+        ).getTime();
+        if (!isAuctionEnding && lastBidTime < latestDefaultBidTime) {
+          setMessage(rawDuration ? "Ended" : "Auction ended");
+          return;
+        }
 
-          if (endDate < lastBidDate && minutes > EXTENSION_AMOUNT) {
-            setMessage(rawDuration ? "Ended" : "Auction ended");
-            return;
-          }
+        // winner, extension
+        const latestBidTime = addMinutes(
+          lastBidTime,
+          EXTENSION_AMOUNT
+        ).getTime();
+        if (!isAuctionEnding && Date.now() > latestBidTime) {
+          setMessage(rawDuration ? "Ended" : "Auction ended");
+          return;
+        }
 
-          if (lastBidDate < endDate && minutes < EXTENSION_AMOUNT) {
-            endDate = addMinutes(
-              getDate(lastBid.created_date),
-              EXTENSION_AMOUNT
-            ).getTime();
-          }
+        if (lastBidTime > latestDefaultBidTime) {
+          endDate = latestBidTime;
         }
 
         setMessage(

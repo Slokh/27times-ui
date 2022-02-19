@@ -5311,10 +5311,10 @@ once@^1.3.0:
   dependencies:
     wrappy "1"
 
-opensea-js@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/opensea-js/-/opensea-js-2.0.0.tgz#9ac7972d472b9045b41260193b6bfc6437fad45f"
-  integrity sha512-+Ka+sR2BgdkUgZdHiuTXRAdIbfBU2CdIC9qwbKDl0p1Veud2Tbr+NTfxnPvYP6HeRO89+ssxF5nWB3XhigXq/A==
+opensea-js@^2.0.1-beta.1:
+  version "2.0.1-beta.1"
+  resolved "https://registry.yarnpkg.com/opensea-js/-/opensea-js-2.0.1-beta.1.tgz#caf9acc753a3282f1c86f10af033fc3465b6b15b"
+  integrity sha512-buNjSrOGamKnjraF1xBd/hh4eb/LxUUDhvB3a+ZXIuXCEA00R9w95Lo91ZsHbn9149urcendOIA3c9Y3TmMoTA==
   dependencies:
     bignumber.js "^4.1.0"
     ethereumjs-abi "git+https://github.com/ProjectWyvern/ethereumjs-abi.git"
