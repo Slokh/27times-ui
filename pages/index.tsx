@@ -30,7 +30,7 @@ const Poem = ({ poem }: any) => {
       </NextLink>
       <Flex justify="space-between">
         <Text fontFamily="Fake Receipt" textShadow="0 0 10px rgba(0,0,0,0.6)">
-          {`${highestBid.toFixed(3)} ETH`}
+          {`${highestBid.toFixed(3)} WETH`}
         </Text>
         <CountdownTimer bids={bids} rawDuration />
       </Flex>

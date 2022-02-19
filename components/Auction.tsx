@@ -101,7 +101,7 @@ export const BidsTable = ({ bids }: any) => (
         <Text
           fontFamily="Fake Receipt"
           textShadow="0 0 10px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.6)"
-        >{`${(bid.bid_amount / 1e18).toFixed(3)} ETH`}</Text>
+        >{`${(bid.bid_amount / 1e18).toFixed(3)} WETH`}</Text>
       </Flex>
     ))}
   </Stack>
@@ -211,7 +211,7 @@ export const AuctionDetails = ({ poem }: any) => {
             fontFamily="Fake Receipt"
             textShadow="0 0 10px rgba(0,0,0,0.6)"
           >
-            {`${highestBid.toFixed(3)} ETH`}
+            {`${highestBid.toFixed(3)} WETH`}
           </Text>
           <Text color="#E4B2BF" textShadow="0 0 10px rgba(0,0,0,0.6)">
             {highestBid ? (
@@ -237,7 +237,7 @@ export const AuctionDetails = ({ poem }: any) => {
                   />
                   <Button
                     bgColor="#E4B2BF"
-                    w={24}
+                    w={36}
                     _hover={{ bgColor: "#fff", color: "#E4B2BF" }}
                     isDisabled={
                       !input ||
@@ -247,7 +247,7 @@ export const AuctionDetails = ({ poem }: any) => {
                     }
                     onClick={handleBid}
                   >
-                    Bid
+                    Bid WETH
                   </Button>
                 </Stack>
                 {!error ? (
