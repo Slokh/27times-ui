@@ -78,9 +78,9 @@ const Poem: NextPage = ({ id }: any) => {
   const isMobile = useBreakpointValue([true, true, true, false]);
 
   let options = [{ label: "Poem", value: <PoemDetails poem={poem} /> }];
-  if (!isAuctionStarting && poem?.bids?.length) {
-    options.push({ label: "Top Bids", value: <BidsTable bids={poem?.bids} /> });
-  }
+  // if (!isAuctionStarting && poem?.bids?.length) {
+  //   options.push({ label: "Top Bids", value: <BidsTable bids={poem?.bids} /> });
+  // }
 
   const right = isMobile ? undefined : (
     <PoemImage
@@ -126,7 +126,6 @@ const Poem: NextPage = ({ id }: any) => {
           </Tooltip>
         </Stack>
       </Stack>
-      {!isAuctionStarting && <AuctionDetails poem={poem} />}
       <Tabs options={options} />
       {isMobile && (
         <PoemImage
