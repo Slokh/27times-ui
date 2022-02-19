@@ -203,10 +203,9 @@ export const AuctionDetails = ({ poem }: any) => {
   };
 
   let isOver = false;
-  if (bids && !isAuctionStarting) {
-    let endDate = END_DATE;
-    const lastBid = bids?.[0];
-
+  let endDate = END_DATE;
+  const lastBid = bids?.[0];
+  if (lastBid && !isAuctionStarting) {
     // no winner
     if (!isAuctionEnding && !lastBid) {
       isOver = true;
