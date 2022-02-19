@@ -202,9 +202,36 @@ export const AuctionDetails = ({ poem }: any) => {
     }
   };
 
+  let isOver = false;
+  if (bids && !isAuctionStarting) {
+    let endDate = END_DATE;
+    const lastBid = bids?.[0];
+
+    // no winner
+    if (!isAuctionEnding && !lastBid) {
+      isOver = true;
+    }
+
+    // winner, no extension
+    const lastBidTime = getDate(lastBid.created_date);
+    const latestDefaultBidTime = subMinutes(
+      endDate,
+      EXTENSION_AMOUNT
+    ).getTime();
+    if (!isAuctionEnding && lastBidTime < latestDefaultBidTime) {
+      isOver = true;
+    }
+
+    // winner, extension
+    const latestBidTime = addMinutes(lastBidTime, EXTENSION_AMOUNT).getTime();
+    if (!isAuctionEnding && Date.now() > latestBidTime) {
+      isOver = true;
+    }
+  }
+
   return (
     <Stack w="full" align="center" spacing={6}>
-      <Stack w="full" direction={["column", "row"]} justify="space-between">
+      <Stack w="full" direction={["column", "row"]} justify="space-around">
         <Flex direction="column" align="center">
           <Text
             fontSize="3xl"
@@ -221,46 +248,48 @@ export const AuctionDetails = ({ poem }: any) => {
             )}
           </Text>
         </Flex>
-        <Stack direction="row" justify="center" align="center">
-          {active && account ? (
-            <>
-              <FormControl w={64} isInvalid={!!error}>
-                <Stack direction="row" justify="center" align="center">
-                  <Input
-                    _focus={{ outlineColor: "#E4B2BF" }}
-                    fontWeight="bold"
-                    fontSize="lg"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    textAlign="right"
-                    isDisabled={!!warning}
-                  />
-                  <Button
-                    bgColor="#E4B2BF"
-                    w={36}
-                    _hover={{ bgColor: "#fff", color: "#E4B2BF" }}
-                    isDisabled={
-                      !input ||
-                      isNaN(+input) ||
-                      parseFloat(input) <= highestBid ||
-                      !!warning
-                    }
-                    onClick={handleBid}
-                  >
-                    Bid WETH
-                  </Button>
-                </Stack>
-                {!error ? (
-                  <FormHelperText color="#fff">{warning}</FormHelperText>
-                ) : (
-                  <FormErrorMessage>{error}</FormErrorMessage>
-                )}
-              </FormControl>
-            </>
-          ) : (
-            <ConnectButton />
-          )}
-        </Stack>
+        {!isOver && (
+          <Stack direction="row" justify="center" align="center">
+            {active && account ? (
+              <>
+                <FormControl w={64} isInvalid={!!error}>
+                  <Stack direction="row" justify="center" align="center">
+                    <Input
+                      _focus={{ outlineColor: "#E4B2BF" }}
+                      fontWeight="bold"
+                      fontSize="lg"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      textAlign="right"
+                      isDisabled={!!warning}
+                    />
+                    <Button
+                      bgColor="#E4B2BF"
+                      w={36}
+                      _hover={{ bgColor: "#fff", color: "#E4B2BF" }}
+                      isDisabled={
+                        !input ||
+                        isNaN(+input) ||
+                        parseFloat(input) <= highestBid ||
+                        !!warning
+                      }
+                      onClick={handleBid}
+                    >
+                      Bid WETH
+                    </Button>
+                  </Stack>
+                  {!error ? (
+                    <FormHelperText color="#fff">{warning}</FormHelperText>
+                  ) : (
+                    <FormErrorMessage>{error}</FormErrorMessage>
+                  )}
+                </FormControl>
+              </>
+            ) : (
+              <ConnectButton />
+            )}
+          </Stack>
+        )}
       </Stack>
     </Stack>
   );
