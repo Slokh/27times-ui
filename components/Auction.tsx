@@ -174,7 +174,7 @@ export const CountdownTimer = ({ bids, rawDuration }: any) => {
       fontFamily="Fake Receipt"
       textAlign="center"
     >
-      {message}
+      {rawDuration ? "Ended" : "Auction ended"}
     </Text>
   );
 };
@@ -202,31 +202,7 @@ export const AuctionDetails = ({ poem }: any) => {
     }
   };
 
-  let isOver = false;
-  let endDate = END_DATE;
-  const lastBid = bids?.[0];
-  if (lastBid && !isAuctionStarting) {
-    // no winner
-    if (!isAuctionEnding && !lastBid) {
-      isOver = true;
-    }
-
-    // winner, no extension
-    const lastBidTime = getDate(lastBid.created_date);
-    const latestDefaultBidTime = subMinutes(
-      endDate,
-      EXTENSION_AMOUNT
-    ).getTime();
-    if (!isAuctionEnding && lastBidTime < latestDefaultBidTime) {
-      isOver = true;
-    }
-
-    // winner, extension
-    const latestBidTime = addMinutes(lastBidTime, EXTENSION_AMOUNT).getTime();
-    if (!isAuctionEnding && Date.now() > latestBidTime) {
-      isOver = true;
-    }
-  }
+  let isOver = true;
 
   return (
     <Stack w="full" align="center" spacing={6}>
